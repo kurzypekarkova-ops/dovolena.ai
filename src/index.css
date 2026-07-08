@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-accent: #FF6B6B; /* Vibrant Coral / Salmon Red */
+  --color-travel-sand: #FFF9F5; /* Beautiful soft peach cream */
+  --color-travel-terracotta: #FF6B6B; /* Use consistent vibrant coral color */
+  --color-travel-amber: #FFE66D; /* Vibrant Sunshine Yellow */
+  --color-travel-teal: #4ECDC4; /* Pastel Turquoise / Mint Green */
+  --color-travel-dark-teal: #1A535C; /* Deep Pine / Dark Teal */
+  --color-travel-peach-border: #FFE0D1; /* Soft peach borders */
+  --color-travel-slate: #2D3436; /* Dark Charcoal text */
+}
+
+body {
+  background-color: #FFF9F5; /* Vibrant Palette main cream background */
+  color: #2D3436; /* Rich slate dark text */
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom premium scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #FFE0D1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FF6B6B;
+}
+
+/* Print optimizations for itinerary */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+}

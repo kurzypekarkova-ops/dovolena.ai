@@ -1,0 +1,6 @@
+{
+  "name": "Dovolena.ai",
+  "description": "Přátelský cestovní asistent, který naplánuje itinerář, sbalí kufr, poradí s frázemi a zkritizuje tvoje balení! Vše v češtině.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
