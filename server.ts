@@ -1,4 +1,4 @@
-import app from "./src/api";
+import app from "./api/index";
 import path from "path";
 import express from "express";
 
