@@ -218,13 +218,21 @@ export default function ItineraryView({ assistant = "eliska" }: { assistant?: st
         }),
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        setItineraryResult(data.text);
-        setIsFallback(!!data.isFallback);
-        saveItinerary(destination.trim(), data.text, !!data.isFallback);
+      let data: any;
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+        if (response.ok) {
+          setItineraryResult(data.text);
+          setIsFallback(!!data.isFallback);
+          saveItinerary(destination.trim(), data.text, !!data.isFallback);
+        } else {
+          setItineraryResult(`❌ Chyba: ${data.error || "Něco se pokazilo"}`);
+        }
       } else {
-        setItineraryResult(`❌ Chyba: ${data.error || "Něco se pokazilo"}`);
+        const errorText = await response.text();
+        const cleanText = errorText.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300);
+        setItineraryResult(`❌ Chyba serveru (Status ${response.status}): ${cleanText || "Nečitelná odpověď serveru"}`);
       }
     } catch (error: any) {
       setItineraryResult(`❌ Nepodařilo se navázat spojení se serverem. ${error.message}`);

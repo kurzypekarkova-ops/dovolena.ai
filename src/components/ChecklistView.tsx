@@ -260,13 +260,21 @@ export default function ChecklistView({ assistant = "eliska" }: { assistant?: st
         }),
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        setRawText(data.text);
-        setIsFallback(!!data.isFallback);
-        parseChecklistMarkdown(data.text, activeDest);
+      let data: any;
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+        if (response.ok) {
+          setRawText(data.text);
+          setIsFallback(!!data.isFallback);
+          parseChecklistMarkdown(data.text, activeDest);
+        } else {
+          alert(`❌ Nepodařilo se vytvořit checklist: ${data.error}`);
+        }
       } else {
-        alert(`❌ Nepodařilo se vytvořit checklist: ${data.error}`);
+        const errorText = await response.text();
+        const cleanText = errorText.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300);
+        alert(`❌ Chyba serveru při vytváření checklistu (Status ${response.status}): ${cleanText || "Nečitelná odpověď"}`);
       }
     } catch (error: any) {
       alert(`❌ Problém na serveru při balení: ${error.message}`);

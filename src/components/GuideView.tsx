@@ -173,12 +173,20 @@ export default function GuideView({ assistant = "eliska" }: { assistant?: string
         }),
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        setGuideResult(data.text);
-        setIsFallback(!!data.isFallback);
+      let data: any;
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+        if (response.ok) {
+          setGuideResult(data.text);
+          setIsFallback(!!data.isFallback);
+        } else {
+          setGuideResult(`❌ Chyba serveru: ${data.error}`);
+        }
       } else {
-        setGuideResult(`❌ Chyba serveru: ${data.error}`);
+        const errorText = await response.text();
+        const cleanText = errorText.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300);
+        setGuideResult(`❌ Chyba serveru (Status ${response.status}): ${cleanText || "Nečitelná odpověď"}`);
       }
     } catch (e: any) {
       setGuideResult(`❌ Nepodařilo se připojit k průvodci dovolena.ai: ${e.message}`);

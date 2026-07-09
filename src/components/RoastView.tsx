@@ -243,12 +243,20 @@ export default function RoastView({ assistant = "eliska" }: { assistant?: string
         }),
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        setRoastResult(data.text);
-        setIsFallback(!!data.isFallback);
+      let data: any;
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+        if (response.ok) {
+          setRoastResult(data.text);
+          setIsFallback(!!data.isFallback);
+        } else {
+          setRoastResult(`❌ Zásah bleskem při roštění: ${data.error}`);
+        }
       } else {
-        setRoastResult(`❌ Zásah bleskem při roštění: ${data.error}`);
+        const errorText = await response.text();
+        const cleanText = errorText.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300);
+        setRoastResult(`❌ Chyba serveru při roštění (Status ${response.status}): ${cleanText || "Nečitelná odpověď"}`);
       }
     } catch (err: any) {
       setRoastResult(`❌ Nepodařilo se připojit k roastovacímu peklu dovolena.ai: ${err.message}`);
